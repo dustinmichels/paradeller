@@ -1,6 +1,6 @@
 # :black_nib: Paradeller
 
-Paradeller is a robo-poet that scours Twitter in search of fodder for paradelle poems.
+Paradeller is a robo-poet that scours Twitter in search of fodder for [paradelle poems](http://www.shadowpoetry.com/resources/wip/paradelle.html).
 
 ## Setup
 
