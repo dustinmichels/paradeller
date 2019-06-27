@@ -1,7 +1,8 @@
 import json
 import os
 
-fp = os.path.abspath("../data/archive.json")
+
+fp = os.path.abspath(os.path.join(os.path.dirname(__file__), "../data/archive.json"))
 
 
 def load_archive():
@@ -12,3 +13,4 @@ def load_archive():
 def update_archive(archive):
     with open(fp, "w") as file:
         json.dump(archive, file)
+
