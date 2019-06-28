@@ -66,7 +66,7 @@ def is_good(text) -> bool:
 def format_status(status):
     """
     Extract relevant info from Status object
-    
+
     Returns
     -------
     dict
@@ -96,15 +96,17 @@ def main(n=200):
 
     # print message
     pre_len = len(archive)
-    print(f"Scraping ~{n*100:,} tweets")
-    print("> Loaded archive from file")
-    print(f"> Archive length: {pre_len:,}")
+    print(f"\nScraping ~{n*100:,} tweets")
+    print("...Loaded archive from file")
+    print(f"...Initial archive length: {pre_len:,}")
 
     # repeatedly get tweets using API, format, add to archive list
+    print("\nScraping!")
     for _ in trange(n):
         statuses = get_tweets()
         tweets = [format_status(s) for s in statuses]
         archive.extend(tweets)
+    print()
 
     # save list to file
     update_archive(archive)
@@ -112,10 +114,10 @@ def main(n=200):
     # print message
     post_len = len(archive)
     size_mb = os.path.getsize(fp) / 1e6
-    print("> Saved archive to file")
-    print(f"> Archive length: {post_len:,}")
-    print(f"> Added {post_len - pre_len:,} tweets")
-    print(f"Archive file is now {size_mb:.2f} MB")
+    print("...Saved archive to file")
+    print(f"...New archive length: {post_len:,}")
+    print(f"...Added {post_len - pre_len:,} tweets")
+    print(f"...Archive file is now {size_mb:.2f} MB")
 
 
 if __name__ == "__main__":
