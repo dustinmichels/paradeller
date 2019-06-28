@@ -10,5 +10,20 @@ pipenv shell
 jupyter labextension install @jupyter-widgets/jupyterlab-manager
 
 # fill out twitter credentials
-mv paradeller/keys.template.py paradeller/keys.py
+cp paradeller/keys.template.py paradeller/keys.py
 ```
+
+## Usage
+
+### Scraping Tweets
+
+Scrape tweets using Scrapy.
+
+```bash
+python -m paradeller.scrape
+python -m paradeller.scrape 100
+```
+
+- Optional CLI argument is the number of iterations of `get_tweets` to perform.
+- Each iteration will scrape about 100 tweets, filter that collection down, then save to archive.
+- Scraper will automatically pause when rate limits are hit and resume when possible.
