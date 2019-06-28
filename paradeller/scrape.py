@@ -49,7 +49,7 @@ def main():
     print(">> Load archive")
     print(">> archive length: ", len(archive))
 
-    n = 300
+    n = 100
     for i in trange(n):
         # get tweets
         statuses = get_tweets(api)
