@@ -1,4 +1,5 @@
 keys.py
+*.pickle
 
 .vscode/
 .ipynb_checkpoints/
