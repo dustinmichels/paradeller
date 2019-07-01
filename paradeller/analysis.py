@@ -59,41 +59,40 @@ def make_adj_list_by_id(data):
     return dict(d)
 
 
-def create_word_dict(data):
-    d = defaultdict(list)
-    for item in data:
-        # get tokens
-        tokens = tokenize(item["text"])
-        for token in tokens:
-            d[token].append(item["id"])
-    return dict(d)
+def get_master_word_set(id1, id2, adj_list_ids):
+    all_words = adj_list_ids[id1].union(adj_list_ids[id2])
+    return all_words
 
 
-def get_combos(tokens):
-    """
-    Keep all combinations of token (sorted)
-    """
-    total = []
-    for i in range(1, len(tokens) + 1):
-        combos = list(combinations(sorted(tokens), i))
-        total.extend(combos)
-    return total
+def get_potential_tweets(id1, id2, adj_list_words, adj_list_ids):
+    all_words = get_master_word_set(id1, id2, adj_list_ids)
+    all_ids = set()
+    for word in all_words:
+        all_ids.update(adj_list_words[word])
+    return all_ids - {id1, id2}
 
 
-def load_all(data: list):
-    """
-    Create dict where combo-tuples are keys
-    and list of ids are values
-    """
-    my_data = defaultdict(list)
+def filter_potential_tweets(pot_ids, adj_list_ids, master_word_set):
+    def is_subset(i):
+        words = adj_list_ids[i]
+        return words <= master_word_set
 
-    # for item in tqdm(data):
-    for item in data:
-        # tokenize
-        tokens = tokenize(item["text"])
-        # find comobos
-        combos = get_combos(tokens)
-        # add to record
-        for combo in combos:
-            my_data[combo].append(item["id"])
-    return my_data
+    return list(filter(is_subset, pot_ids))
+
+
+def find_valid_matches(ids, adj_list_ids, master_word_set):
+    combos = list(combinations(ids, 2))
+    valid = []
+    for c in combos:
+        words = adj_list_ids[c[0]].union(adj_list_ids[c[1]])
+        if words == master_word_set:
+            valid.append(c)
+    return valid
+
+
+def find_maches(id1, id2, adj_list_ids, adj_list_words):
+    master_word_set = get_master_word_set(id1, id2, adj_list_ids)
+    pot_ids = get_potential_tweets(id1, id2, adj_list_words, adj_list_ids)
+    pot_ids = filter_potential_tweets(pot_ids, adj_list_ids, master_word_set)
+    valid = find_valid_matches(pot_ids, adj_list_ids, master_word_set)
+    return valid

@@ -51,7 +51,7 @@ def is_good(text) -> bool:
 
     # word count too low or too high?
     tweet_len = len(text.split())
-    if (tweet_len < 3) or (tweet_len > 10):
+    if (tweet_len < 4) or (tweet_len > 10):
         return False
 
     # has blacklisted words/symbols?
@@ -103,9 +103,12 @@ def main(n=200):
     # repeatedly get tweets using API, format, add to archive list
     print("\nScraping!")
     for _ in trange(n):
-        statuses = get_tweets()
-        tweets = [format_status(s) for s in statuses]
-        archive.extend(tweets)
+        try:
+            statuses = get_tweets()
+            tweets = [format_status(s) for s in statuses]
+            archive.extend(tweets)
+        except tweepy.TweepError as e:
+            print(e)
 
     # save list to file
     update_archive(archive)
