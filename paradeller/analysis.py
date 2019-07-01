@@ -40,6 +40,25 @@ def tokenize(text, keep_emoji=False):
     return [w.lower().strip() for w in words]
 
 
+def make_adj_list_by_word(data):
+    d = defaultdict(set)
+    for item in data:
+        # get tokens
+        tokens = tokenize(item["text"])
+        for token in tokens:
+            d[token].add(item["id"])
+    return dict(d)
+
+
+def make_adj_list_by_id(data):
+    d = defaultdict(set)
+    for item in data:
+        # get tokens
+        tokens = tokenize(item["text"])
+        d[item["id"]] = set(tokens)
+    return dict(d)
+
+
 def create_word_dict(data):
     d = defaultdict(list)
     for item in data:
