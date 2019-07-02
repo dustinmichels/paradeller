@@ -14,3 +14,6 @@ def update_archive(archive):
     with open(fp, "w") as file:
         json.dump(archive, file)
 
+
+def comma_print(n):
+    print(f"{n:,}")
