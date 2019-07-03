@@ -1,4 +1,5 @@
 import pickle
+import sys
 from itertools import combinations
 from statistics import mean
 
@@ -9,7 +10,7 @@ from paradeller.analysis import find_matches, find_matches_for_start_pairs
 from paradeller.helper import read_from_pickle
 
 
-def main(n=10):
+def main(n=100):
     _, _, adj_list_words, adj_list_ids = read_from_pickle()
 
     # sort tweet ids by avg popularity of its words
@@ -31,6 +32,8 @@ def main(n=10):
     with open("data/found.pickle", "wb") as f:
         pickle.dump(all_valid, f)
 
+    print("results saved to data/found.pickle")
+
 
 # def run_parallel():
 #     data, duplicates, adj_list_words, adj_list_ids = read_from_pickle()
@@ -42,4 +45,10 @@ def main(n=10):
 
 
 if __name__ == "__main__":
-    main()
+    default_n = "100"
+
+    # parse command line arguments
+    args_dict = dict(enumerate(sys.argv))
+    n = int(args_dict.get(1, default_n))
+
+    main(n)
