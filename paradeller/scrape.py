@@ -34,16 +34,6 @@ def get_tweets():
     return [t for t in tweets if is_good(t.text)]
 
 
-def display_status(status):
-    """
-    Print a single status
-    """
-    print(status.text)
-    print(f"-- @{status.author.screen_name}\n")
-    print(status.id)
-    print("~" * 50)
-
-
 def is_good(text) -> bool:
     """
     Returns True of text looks useable, False otherwise.
@@ -51,7 +41,7 @@ def is_good(text) -> bool:
 
     # word count too low or too high?
     tweet_len = len(text.split())
-    if (tweet_len < 4) or (tweet_len > 10):
+    if (tweet_len < 3) or (tweet_len > 10):
         return False
 
     # has blacklisted words/symbols?
@@ -92,10 +82,10 @@ def main(n=200):
     """
 
     # load archive JSON file into Python list
-    archive = load_archive()
+    data = load_archive()
 
     # print message
-    pre_len = len(archive)
+    pre_len = len(data)
     print(f"\nScraping ~{n*100:,} tweets")
     print("...Loaded archive from file")
     print(f"...Initial archive length: {pre_len:,}")
@@ -106,15 +96,21 @@ def main(n=200):
         try:
             statuses = get_tweets()
             tweets = [format_status(s) for s in statuses]
-            archive.extend(tweets)
+            data.extend(tweets)
         except tweepy.TweepError as e:
             print(e)
 
+    # remove duplicate ids
+    d = {}
+    for item in data:
+        d[item["id"]] = item
+    data = list(d.values())
+
     # save list to file
-    update_archive(archive)
+    update_archive(data)
 
     # print message
-    post_len = len(archive)
+    post_len = len(data)
     size_mb = os.path.getsize(fp) / 1e6
     print("\n...Saved archive to file")
     print(f"...New archive length: {post_len:,}")
