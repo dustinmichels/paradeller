@@ -43,7 +43,7 @@ def find_matches(id1, id2, adj_list_ids, adj_list_words):
 
 def get_potential_tweets(stanza_words, adj_list_words) -> set:
     """Get all tweets that share words with start tweets"""
-    potential_ids = set()
+    potential_ids: Set[int] = set()
     for word in stanza_words:
         potential_ids.update(adj_list_words[word])
     return potential_ids
