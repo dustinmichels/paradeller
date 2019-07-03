@@ -1,4 +1,4 @@
-from paradeller.analysis import tokenize
+from paradeller.dataprep import tokenize
 from .poems import sample1, sample2, sample3
 
 

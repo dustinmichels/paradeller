@@ -6,6 +6,9 @@ import tweepy
 from tqdm import tqdm, trange
 
 from paradeller.helper import load_archive, update_archive, fp
+
+from paradeller.dataprep import tokenize
+
 from paradeller.keys import (
     access_token,
     accss_token_secret,
@@ -40,7 +43,7 @@ def is_good(text) -> bool:
     """
 
     # word count too low or too high?
-    tweet_len = len(text.split())
+    tweet_len = len(tokenize(text))
     if (tweet_len < 3) or (tweet_len > 10):
         return False
 
