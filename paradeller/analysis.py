@@ -198,6 +198,7 @@ def find_valid_matches(pot_ids, adj_list_ids, stanza_words):
 
     # for each pair:
     # get combination of words, check if equals stanza_words
+    # TODO: check pair len? skip sorting?
     valid = []
     for pair in combos:
         a, b = pair
