@@ -65,7 +65,7 @@ def filter_out_duplicates(data, duplicates):
 
 
 def filter_out_short(data, n=3):
-    """Only keep tweets with >= n tokens"""
+    """Only keep tweets with # tokens >= n"""
     return [x for x in tqdm(data) if len(tokenize(x["text"])) >= n]
 
 
