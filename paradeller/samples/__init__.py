@@ -16,7 +16,7 @@ def datafy_poem(text, name, counter):
     # convert to dict
     data = []
     for i, line in enumerate(lines):
-        data.append(dict(id=counter, text=line, poem=name, line=i))
+        data.append(dict(id=counter, text=line, poem=name, line=i, author="unknown"))
         counter += 1
     return data, counter
 

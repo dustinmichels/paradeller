@@ -1,5 +1,7 @@
 keys.py
-*.pickle
 
 .vscode/
+
+*.pickle
 .ipynb_checkpoints/
+__pycache__/

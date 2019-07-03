@@ -15,6 +15,10 @@ emoji = "*"
 ipywidgets = "*"
 tqdm = "*"
 pandas = "*"
+numba = "*"
+joblib = "*"
+altair = "*"
+seaborn = "*"
 
 [requires]
 python_version = "3.7"
