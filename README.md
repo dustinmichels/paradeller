@@ -2,7 +2,44 @@
 
 Paradeller is a robo-poet that scours Twitter in search of fodder for [paradelle poems](http://www.shadowpoetry.com/resources/wip/paradelle.html).
 
-## Intro
+## Setup
+
+```bash
+pipenv install --dev
+pipenv shell
+jupyter labextension install @jupyter-widgets/jupyterlab-manager
+```
+
+Create Twitter API credentials and populate `keys.py`
+
+```bash
+cp paradeller/keys.template.py paradeller/keys.py
+```
+
+## Usage
+
+### Scraping Tweets
+
+Scrape tweets using Tweepy.
+
+```bash
+python -m paradeller.scrape
+python -m paradeller.scrape 100
+```
+
+- Optional CLI argument is the number of iterations of `get_tweets` to perform.
+- Each iteration will scrape about 100 tweets, filter that collection down, then save to `data/archive.json`.
+- Scraper will automatically pause when rate limits are hit and resume when possible.
+
+### Analyzing Tweets
+
+To search for paradelles in the saved tweets, use `paradeller/run.py`.
+
+```bash
+python -m paradeller.run 1000
+```
+
+## About
 
 A paradelle is a poem that looks like this:
 
@@ -44,43 +81,6 @@ For the first three stanzas:
 - Lines 5 & 6 must use all the words from lines 1 & 3 (no more no less).
 
 For the final stanza, you must use all the words from lines 1 & 3 of the previous stanzas.
-
-## Setup
-
-```bash
-pipenv install --dev
-pipenv shell
-jupyter labextension install @jupyter-widgets/jupyterlab-manager
-```
-
-Create Twitter API credentials and populate `keys.py`
-
-```bash
-cp paradeller/keys.template.py paradeller/keys.py
-```
-
-## Usage
-
-### Scraping Tweets
-
-Scrape tweets using Tweepy.
-
-```bash
-python -m paradeller.scrape
-python -m paradeller.scrape 100
-```
-
-- Optional CLI argument is the number of iterations of `get_tweets` to perform.
-- Each iteration will scrape about 100 tweets, filter that collection down, then save to `data/archive.json`.
-- Scraper will automatically pause when rate limits are hit and resume when possible.
-
-### Analyzing Tweets
-
-To search for paradelles in the saved tweets, use `paradeller/run.py`.
-
-```bash
-python -m paradeller.run 1000
-```
 
 ## Dev
 
