@@ -6,6 +6,8 @@ import emoji
 import numpy as np
 from tqdm.auto import tqdm, trange
 
+from paradeller.helper import load_archive, read_from_pickle, save_to_pickle
+
 
 def tokenize(text, keep_emoji=False):
     """
@@ -140,3 +142,62 @@ def create_adj_list_by_word(data):
         for token in tokens:
             adj_list_by_word[token].add(item["id"])
     return dict(adj_list_by_word)
+
+
+# ---------- COMBINED ----------
+
+
+def load_and_prep(use_pickle=False, update_pickle=False):
+    """
+    Load and prep all data, either from file or from pickle.
+    Returns tuple: data, duplicates, adj_list_words, adj_list_ids
+    """
+
+    if use_pickle:
+        print("Loading real, processed data from pickle...")
+        data, duplicates, adj_list_words, adj_list_ids = read_from_pickle()
+    else:
+        print("Loading unprocessed real data...")
+        data = load_archive()
+
+        showlen = lambda data: print(f"Length: {len(data):,}")
+
+        showlen(data)
+        print("\nCleaning up data...")
+
+        # remove too short
+        print("> Remove too short")
+        data = filter_out_short(data)
+        showlen(data)
+
+        # remove duplicate phrases
+        print("> Remove duplicate phrases")
+        duplicates = find_duplicates(data)
+        data = filter_out_duplicates(data, duplicates)
+        showlen(data)
+
+        # remove oddballs (too few matches)
+        print("> Recursively remove oddballs")
+        data = filter_out_oddballs_recursive(data)
+        showlen(data)
+
+        print("\nCreating adjacency lists...")
+        # make adj lists
+        adj_list_words, adj_list_ids = restructure_data(data)
+
+        if update_pickle:
+            print("\nSaving new data to pickle...")
+            save_to_pickle((data, duplicates, adj_list_words, adj_list_ids))
+
+    print("-" * 50)
+    print("DONE\n")
+    stuff = {
+        "data": data,
+        "duplicates": duplicates,
+        "adj_list_words": adj_list_words,
+        "adj_list_ids": adj_list_ids,
+    }
+    for k, v in stuff.items():
+        print(f"{k:15} type: {type(v)}\tlen: {len(v):,}")
+
+    return data, duplicates, adj_list_words, adj_list_ids
