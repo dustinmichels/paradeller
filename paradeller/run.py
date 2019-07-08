@@ -44,6 +44,7 @@ if __name__ == "__main__":
     with Pool(os.cpu_count()) as pool:
         res = list(tqdm(pool.imap(find_matches_for_pair, pairs), total=len(pairs)))
 
+    # zip results with search pairs, filter out empty
     all_valid = [x for x in list(zip(pairs, res)) if x[1]]
     print(f"Found {len(all_valid)} results.")
 
