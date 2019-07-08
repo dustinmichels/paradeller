@@ -40,17 +40,17 @@ if __name__ == "__main__":
     pairs = list(combinations(some_ids, 2))
 
     # search
-    print(f"searching for matches, using {n} ids")
+    print("searching for matches, using {} ids".format(n))
     with Pool(os.cpu_count()) as pool:
         res = list(tqdm(pool.imap(find_matches_for_pair, pairs), total=len(pairs)))
 
     # zip results with search pairs, filter out empty
     all_valid = [x for x in list(zip(pairs, res)) if x[1]]
-    print(f"Found {len(all_valid)} results.")
+    print("Found {} results.".format(len(all_valid)))
 
     # get filename
     d = datetime.utcnow()
-    filename = f'data/found_{d.strftime("%Y-%m-%d-%H-%M")}.pickle'
+    filename = "data/found_{}.pickle".format(d.strftime("%Y-%m-%d-%H-%M"))
 
     # save to file
     with open(filename, "wb") as f:
