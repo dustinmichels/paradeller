@@ -6,7 +6,6 @@ from itertools import combinations
 from multiprocessing import Pool
 from statistics import mean
 
-from joblib import Parallel, delayed
 from tqdm.auto import tqdm
 
 from paradeller.analysis import find_matches, find_matches_for_start_pairs
