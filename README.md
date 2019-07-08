@@ -4,17 +4,45 @@ Paradeller is a robo-poet that scours Twitter in search of fodder for [paradelle
 
 ## Setup
 
+### 1) Install [Git Large File Storage](https://git-lfs.github.com/)
+
 ```bash
+# MacOS
+brew install git-lfs
+
+# Linux
+sudo apt-get install git-lfs
+
+# Initialize
+git lfs install
+```
+
+### 2) Clone Repo
+
+```bash
+git clone https://github.com/dustinmichels/paradeller.git
+cd paradeller
+```
+
+### 3) Install Python Dependencies
+
+```bash
+# dev
 pipenv install --dev
 pipenv shell
 jupyter labextension install @jupyter-widgets/jupyterlab-manager
+
+# prod
+pip -r requirements.txt
 ```
 
-Create Twitter API credentials and populate `keys.py`
+### 4) _[Optional]_ Twitter API Keys
 
-```bash
-cp paradeller/keys.template.py paradeller/keys.py
-```
+If you will be scraping tweets:
+
+- Create Twitter API credentials
+- Copy keys template: `cp paradeller/keys.template.py paradeller/keys.py`
+- Populate `keys.py` with API credentials
 
 ## Usage
 
@@ -31,12 +59,27 @@ python -m paradeller.scrape 100
 - Each iteration will scrape about 100 tweets, filter that collection down, then save to `data/archive.json`.
 - Scraper will automatically pause when rate limits are hit and resume when possible.
 
+Can easily run with default of 10,000 tweets using:
+
+```bash
+./scrape.sh
+```
+
 ### Analyzing Tweets
 
 To search for paradelles in the saved tweets, use `paradeller/run.py`.
 
 ```bash
+python -m paradeller.run
 python -m paradeller.run 1000
+```
+
+- Optional CLI argument is number of ids to pair off as initial pairs
+
+Can easily run with default of 1,000 ids using:
+
+```bash
+./search.sh
 ```
 
 ## About
@@ -70,8 +113,8 @@ A paradelle is a poem that looks like this:
 > through astral visions. Hover above  
 > earthbound limitations on celestial wings,  
 > and as twilight falls, explore wealth -- untapped.
-
--- "A Paradelle of Winged Flight", Mary Ellen Clark, 2003.
+>
+> _("A Paradelle of Winged Flight", Mary Ellen Clark, 2003.)_
 
 The rules are fairly simple.
 
