@@ -1,6 +1,10 @@
 # :black_nib: Paradeller
 
-Paradeller is a robo-poet that scours Twitter in search of fodder for [paradelle poems](http://www.shadowpoetry.com/resources/wip/paradelle.html). A paradelle is a poem that looks like this:
+Paradeller is a robo-poet that scours Twitter in search of fodder for [paradelle poems](http://www.shadowpoetry.com/resources/wip/paradelle.html).
+
+## Intro
+
+A paradelle is a poem that looks like this:
 
 > Twilight falls, darkness cover me  
 > Twilight falls, darkness cover me  
@@ -30,16 +34,16 @@ Paradeller is a robo-poet that scours Twitter in search of fodder for [paradelle
 > earthbound limitations on celestial wings,  
 > and as twilight falls, explore wealth -- untapped.
 
-("A Paradelle of Winged Flight", Mary Ellen Clark, 2003).
+-- "A Paradelle of Winged Flight", Mary Ellen Clark, 2003.
+
+The rules are fairly simple.
 
 For the first three stanzas:
 
-- The first line and the third line repeat.
-- The final two lines (5 & 6) use all the words from lines 1 & 3.
+- Lines 1 & 3 must repeat.
+- Lines 5 & 6 must use all the words from lines 1 & 3 (no more no less).
 
-For the final stanza:
-
-- Use all the words from the previous stanzas.
+For the final stanza, you must use all the words from lines 1 & 3 of the previous stanzas.
 
 ## Setup
 
@@ -76,4 +80,12 @@ To search for paradelles in the saved tweets, use `paradeller/run.py`.
 
 ```bash
 python -m paradeller.run 1000
+```
+
+## Dev
+
+To generate `requirements.txt` from `Pipefile`:
+
+```bash
+pipenv lock -r > requirements.txt
 ```

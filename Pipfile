@@ -7,18 +7,17 @@ verify_ssl = true
 pylint = "*"
 mypy = "*"
 black = "*"
+jupyterlab = "*"
+ipywidgets = "*"
+altair = "*"
+seaborn = "*"
 
 [packages]
 tweepy = "*"
-jupyterlab = "*"
 emoji = "*"
-ipywidgets = "*"
 tqdm = "*"
 pandas = "*"
-numba = "*"
-joblib = "*"
-altair = "*"
-seaborn = "*"
+
 
 [requires]
 python_version = "3.7"
