@@ -2,32 +2,32 @@
 
 Paradeller is a robo-poet that scours Twitter in search of fodder for [paradelle poems](http://www.shadowpoetry.com/resources/wip/paradelle.html). A paradelle is a poem that looks like this:
 
-> Twilight falls, darkness cover me
-> Twilight falls, darkness cover me
-> as gentle slumber lures awakening dreams
-> as gentle slumber lures awakening dreams
-> cover me gentle twilight, darkness lures dreams,
+> Twilight falls, darkness cover me  
+> Twilight falls, darkness cover me  
+> as gentle slumber lures awakening dreams  
+> as gentle slumber lures awakening dreams  
+> cover me gentle twilight, darkness lures dreams,  
 > awakening as slumber falls.
 >
-> Journey on celelstial wings through astral visions
-> Journey on celelstial wings through astral visions
-> and hover above earth-bound limitations
-> and hover above earth-bound limitations
-> on celestial wings, hover above earth bound limitations
+> Journey on celelstial wings through astral visions  
+> Journey on celelstial wings through astral visions  
+> and hover above earth-bound limitations  
+> and hover above earth-bound limitations  
+> on celestial wings, hover above earth bound limitations  
 > and journey through astral visions.
 >
-> Explore the expansiveness of self,
-> Explore the expansiveness of self,
-> look within and discover your untapped wealth
-> look within and discover your untapped wealth
-> look within the expansiveness of self,
+> Explore the expansiveness of self,  
+> Explore the expansiveness of self,  
+> look within and discover your untapped wealth  
+> look within and discover your untapped wealth  
+> look within the expansiveness of self,  
 > discover and explore your untapped wealth.
 >
-> cover me, dreams look within darkness
-> journey -- discover your gentle awakening;
-> slumber lures the expansiveness of self
-> through astral visions. Hover above
-> earthbound limitations on celestial wings,
+> cover me, dreams look within darkness  
+> journey -- discover your gentle awakening;  
+> slumber lures the expansiveness of self  
+> through astral visions. Hover above  
+> earthbound limitations on celestial wings,  
 > and as twilight falls, explore wealth -- untapped.
 
 ("A Paradelle of Winged Flight", Mary Ellen Clark, 2003).
