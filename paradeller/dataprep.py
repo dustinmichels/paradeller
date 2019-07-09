@@ -1,11 +1,10 @@
 import string
 from collections import defaultdict
 from statistics import mean
-from typing import Dict, Iterable, List
+from typing import Dict
 
 import emoji
-import numpy as np
-from tqdm.auto import tqdm, trange
+from tqdm.auto import tqdm
 
 from paradeller.helper import load_archive, read_from_pickle, save_to_pickle
 
