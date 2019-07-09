@@ -27,15 +27,20 @@ def find_final_stanzas_helper(stanzas):
 
 if __name__ == "__main__":
     default_n = "100"
+    default_style = "load"  # or "load" | "fresh"
 
     # parse command line arguments
     args_dict = dict(enumerate(sys.argv))
     n = int(args_dict.get(1, default_n))
+    style = args_dict.get(2, default_style)
 
     # ---------- LOOK FOR STANZAS ----------
 
     # load & prepare data
-    data, duplicates, adj_list_words, adj_list_ids = load_and_prep(use_pickle=True)
+    use_pickle = style == "load"
+    data, duplicates, adj_list_words, adj_list_ids = load_and_prep(
+        use_pickle=use_pickle
+    )
 
     # sort tweet ids by avg popularity of its words
     print("\nSorting by popularity...")
