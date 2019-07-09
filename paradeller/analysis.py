@@ -1,12 +1,8 @@
-import string
-from collections import defaultdict
 from itertools import chain, combinations
-from math import factorial as fact
-from typing import Dict, Iterable, List, Set
+from typing import Set
 
-import emoji
-import numpy as np
-from tqdm.auto import tqdm, trange
+from tqdm.auto import tqdm
+
 
 # ---------- FIND STANZAS ----------
 

@@ -1,7 +1,5 @@
 import os
-import pickle
 import sys
-from datetime import datetime
 from itertools import combinations
 from multiprocessing import Pool
 
@@ -12,13 +10,9 @@ from paradeller.analysis import (
     consolidate_stanzas,
     find_final_stanzas,
     find_matches,
-    find_matches_for_start_pairs,
 )
 from paradeller.dataprep import load_and_prep, sort_ids_by_popularity
 from paradeller.helper import save_results
-
-# load & prepare data
-data, duplicates, adj_list_words, adj_list_ids = load_and_prep()
 
 
 def find_matches_for_pair(p):
@@ -39,6 +33,9 @@ if __name__ == "__main__":
     n = int(args_dict.get(1, default_n))
 
     # ---------- LOOK FOR STANZAS ----------
+
+    # load & prepare data
+    data, duplicates, adj_list_words, adj_list_ids = load_and_prep(use_pickle=True)
 
     # sort tweet ids by avg popularity of its words
     print("\nSorting by popularity...")
