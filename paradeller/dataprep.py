@@ -94,7 +94,7 @@ def filter_out_oddballs_recursive(data):
         print("Nothing removed. Done filtering.")
         return data
     else:
-        print(f"{diff} tweets removed. Running again.")
+        print(f"{diff:,} tweets removed. Running again.")
         return filter_out_oddballs_recursive(data)
 
 
