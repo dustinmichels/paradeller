@@ -153,6 +153,8 @@ def load_and_prep(use_pickle=False, update_pickle=False):
     Returns tuple: data, duplicates, adj_list_words, adj_list_ids
     """
 
+    # TODO: If archive.json newer than stuff.pickle, update pickle
+
     if use_pickle:
         print("Loading real, processed data from pickle...")
         data, duplicates, adj_list_words, adj_list_ids = read_from_pickle()
