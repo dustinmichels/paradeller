@@ -64,19 +64,20 @@ def find_valid_matches(pot_ids, adj_list_ids, stanza_words):
     return valid
 
 
-# ---------- FIND POEMS ----------
-
-
-def get_stanzas(all_valid):
+def consolidate_stanzas(valid_stanzas):
     stanzas = []
-    for pair, matches in all_valid:
+    for pair, matches in valid_stanzas:
         t1, t2 = pair
         stanza_start = [t1, t2]
         for match in matches:
             a, b = match
             stanza = stanza_start + [a, b]
-        stanzas.append(tuple(stanza))
-    return stanzas
+        stanzas.append(stanza)
+    stanzas = set([tuple(sorted(x)) for x in stanzas])
+    return list(stanzas)
+
+
+# ---------- FIND POEMS ----------
 
 
 def find_final_stanzas_from_stanzas(stanzas, adj_list_ids, adj_list_words):
@@ -88,11 +89,11 @@ def find_final_stanzas_from_stanzas(stanzas, adj_list_ids, adj_list_words):
     # filtered generator (all lines unique)
     combos = (c for c in all_combos if len(set().union(*c)) == 12)
 
-    all_valid = {}
+    all_valid = []
     for combo in tqdm(combos):
         valid = find_final_stanzas(*combo, adj_list_ids, adj_list_words)
         if valid:
-            all_valid[combo] = valid
+            all_valid.append((combo, valid))
     return all_valid
 
 
@@ -133,3 +134,13 @@ def find_valid_final_lines(pot_ids, adj_list_ids, prev_stanza_words):
         if sorted(words) == sorted(prev_stanza_words):
             valid.append(stanza)
     return valid
+
+
+def consolidate_poems(valid_poems):
+    poems = []
+    for init_stanzas, matches in valid_poems:
+        poem_start = list(init_stanzas)
+        for end in matches:
+            poem = poem_start + [end]
+        poems.append(poem)
+    return poems

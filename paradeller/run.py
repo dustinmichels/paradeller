@@ -4,38 +4,31 @@ import sys
 from datetime import datetime
 from itertools import combinations
 from multiprocessing import Pool
-from statistics import mean
 
 from tqdm.auto import tqdm
 
 from paradeller.analysis import (
+    consolidate_poems,
+    consolidate_stanzas,
+    find_final_stanzas,
     find_matches,
     find_matches_for_start_pairs,
-    get_stanzas,
-    find_final_stanzas,
 )
-from paradeller.helper import read_from_pickle
+from paradeller.dataprep import load_and_prep, sort_ids_by_popularity
+from paradeller.helper import save_results
 
-# load saved data from pickle
-print("loading saved data from pickle...")
-_, _, adj_list_words, adj_list_ids = read_from_pickle()
-
-# sort tweet ids by avg popularity of its words
-print("sorting by popularity...")
-pop = []
-for tweet_id, words in tqdm(adj_list_ids.items()):
-    pop.append((tweet_id, mean([len(adj_list_words[word]) for word in words])))
-pop.sort(key=lambda x: x[1], reverse=True)
-
-# define helper functions that takes single parameter
+# load & prepare data
+data, duplicates, adj_list_words, adj_list_ids = load_and_prep()
 
 
 def find_matches_for_pair(p):
+    """Helper function to find initial stanzas, given a pair of lines"""
     return find_matches(p[0], p[1], adj_list_ids, adj_list_words)
 
 
 def find_final_stanzas_helper(stanzas):
-    find_final_stanzas(*stanzas, adj_list_ids, adj_list_words)
+    """Helper function to find final stanzas, given a group of 3 stanzas"""
+    return find_final_stanzas(*stanzas, adj_list_ids, adj_list_words)
 
 
 if __name__ == "__main__":
@@ -47,52 +40,45 @@ if __name__ == "__main__":
 
     # ---------- LOOK FOR STANZAS ----------
 
+    # sort tweet ids by avg popularity of its words
+    print("\nSorting by popularity...")
+    sorted_ids = sort_ids_by_popularity(adj_list_ids, adj_list_words)
+
     # choose some IDS
-    some_ids = [x[0] for x in pop[:n]]
+    some_ids = sorted_ids[:n]
     pairs = list(combinations(some_ids, 2))
 
-    # search
-    print("searching for matches, using {} ids".format(n))
+    # search for stanzas
+    print(f"\nSearching for matches, using {n} ids")
     with Pool(os.cpu_count()) as pool:
         res = list(tqdm(pool.imap(find_matches_for_pair, pairs), total=len(pairs)))
 
     # zip results with search pairs, filter out empty
-    all_valid = [x for x in list(zip(pairs, res)) if x[1]]
-    print("Found {} results.".format(len(all_valid)))
-
-    # get filename
-    d = datetime.utcnow()
-    filename = "data/found_stanzas_{}.pickle".format(d.strftime("%Y-%m-%d-%H-%M"))
-
-    # save to file
-    with open(filename, "wb") as f:
-        pickle.dump(all_valid, f)
-    print("stanzas saved to data/found_stanzas_[datetime].pickle")
+    valid_stanzas = [x for x in list(zip(pairs, res)) if x[1]]
+    stanzas = consolidate_stanzas(valid_stanzas)
+    print(f"Found {len(stanzas)} results.")
 
     # ---------- LOOK FOR PARADELLES ----------
-    if len(all_valid) >= 3:
-        stanzas = get_stanzas(all_valid)
-
+    if len(stanzas) >= 3:
         # find combos to chcek
-        print("Finding combos to check...")
+        print("Finding combos to check (this may take a while)...")
         all_combos = combinations(stanzas, 3)
         combos = [c for c in all_combos if len(set().union(*c)) == 12]
 
         # look for complete paradelles
-        print("searching for complete paradelles within found stanzas")
+        print("Searching for complete paradelles")
         with Pool(os.cpu_count()) as pool:
             res = list(
                 tqdm(pool.imap(find_final_stanzas_helper, combos), total=len(combos))
             )
-        all_poems = [x for x in list(zip(combos, res)) if x[1]]
-        print("Found {} poems.".format(len(all_poems)))
-
-        # get filename
-        filename = "data/found_poems_{}.pickle".format(d.strftime("%Y-%m-%d-%H-%M"))
-
-        # save to file
-        with open(filename, "wb") as f:
-            pickle.dump(all_valid, f)
-        print("results saved to data/found_poems_[datetime].pickle")
+        valid_poems = [x for x in list(zip(combos, res)) if x[1]]
+        poems = consolidate_poems(valid_poems)
+        print(f"Found {len(poems)} poems.")
     else:
-        print("No complete poems found :(")
+        print("Not enough stanzas to check for poems")
+        poems = []
+
+    # ---------- SUMMARIZE & SAVE ----------
+    results = dict(stanzas=stanzas, poems=poems, duplicates=duplicates)
+    save_results(results)
+    print("results saved to data/found/results_[datetime].pickle")
