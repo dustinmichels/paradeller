@@ -198,12 +198,12 @@ def load_and_prep(use_pickle=False, update_pickle=False):
     """
 
     # TODO: If archive.json newer than stuff.pickle, update pickle
-
+    print("")
     if use_pickle:
-        print("Loading real, processed data from pickle...")
+        print("Loading processed data from pickle...")
         data, duplicates, adj_list_words, adj_list_ids = read_from_pickle()
     else:
-        print("Loading unprocessed real data...")
+        print("Loading raw data from archive.json...")
         data = load_archive()
         data, duplicates, adj_list_words, adj_list_ids = prep_data(data)
 
