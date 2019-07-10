@@ -1,6 +1,5 @@
 import os
 import sys
-import time
 from itertools import combinations
 from multiprocessing import Pool
 
@@ -27,29 +26,11 @@ def find_final_stanzas_helper(stanzas):
     return find_final_stanzas(*stanzas, adj_list_ids, adj_list_words)
 
 
-def init_google_profiler():
-    # Profiler initialization. It starts a daemon thread which continuously
-    # collects and uploads profiles. Best done as early as possible.
-    try:
-        googlecloudprofiler.start(
-            service="paradeller",
-            service_version="1.0.1",
-            # verbose is the logging level. 0-error, 1-warning, 2-info,
-            # 3-debug. It defaults to 0 (error) if not set.
-            verbose=3,
-            # project_id must be set if not running on GCP.
-            # project_id='my-project-id',
-        )
-    except (ValueError, NotImplementedError) as exc:
-        print(exc)  # Handle errors here
-
-
 if __name__ == "__main__":
-    # init profiling
+    # init profiling, if running on Google Compute Engine
     if os.getenv("USER", "") == "dustin7538":
         print("Initialzing Google profiler...")
-        init_google_profiler()
-        time.sleep(60)  # for neater logging output
+        googlecloudprofiler.start(service="paradeller", verbose=1)
 
     # parse command line arguments
     default_n = "100"
