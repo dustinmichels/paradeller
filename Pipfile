@@ -11,12 +11,16 @@ jupyterlab = "*"
 ipywidgets = "*"
 altair = "*"
 seaborn = "*"
+beautifulsoup4 = "*"
+ebooklib = "*"
+nltk = "*"
 
 [packages]
-tweepy = "*"
 emoji = "*"
-tqdm = "*"
+numpy = "*"
 pandas = "*"
+tweepy = "*"
+tqdm = "*"
 
 
 [requires]
