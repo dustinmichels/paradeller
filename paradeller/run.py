@@ -31,7 +31,7 @@ def init_google_profiler():
     # collects and uploads profiles. Best done as early as possible.
     try:
         googlecloudprofiler.start(
-            service="hello-profiler",
+            service="paradeller",
             service_version="1.0.1",
             # verbose is the logging level. 0-error, 1-warning, 2-info,
             # 3-debug. It defaults to 0 (error) if not set.
@@ -45,7 +45,8 @@ def init_google_profiler():
 
 if __name__ == "__main__":
     # init profiling
-    init_google_profiler()
+    if os.getenv("USER", "") == "dustin7538":
+        init_google_profiler()
 
     # parse command line arguments
     default_n = "100"
