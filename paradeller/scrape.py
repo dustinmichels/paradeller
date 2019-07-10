@@ -1,14 +1,11 @@
-import json
 import os
 import sys
 
 import tweepy
-from tqdm import tqdm, trange
-
-from paradeller.helper import load_archive, update_archive, fp
+from tqdm import trange
 
 from paradeller.dataprep import tokenize
-
+from paradeller.helper import load_archive, update_archive, fp
 from paradeller.keys import (
     access_token,
     accss_token_secret,
