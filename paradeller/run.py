@@ -1,11 +1,12 @@
 import os
 import sys
+import time
 from itertools import combinations
 from multiprocessing import Pool
 
+import googlecloudprofiler
 from tqdm.auto import tqdm
 
-import googlecloudprofiler
 from paradeller.analysis import (
     consolidate_poems,
     consolidate_stanzas,
@@ -47,6 +48,7 @@ if __name__ == "__main__":
     # init profiling
     if os.getenv("USER", "") == "dustin7538":
         init_google_profiler()
+        time.sleep(10)  # for neater logging output
 
     # parse command line arguments
     default_n = "100"
