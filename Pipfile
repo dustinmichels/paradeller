@@ -11,9 +11,6 @@ jupyterlab = "*"
 ipywidgets = "*"
 altair = "*"
 seaborn = "*"
-beautifulsoup4 = "*"
-ebooklib = "*"
-nltk = "*"
 
 [packages]
 emoji = "*"
@@ -21,7 +18,7 @@ numpy = "*"
 pandas = "*"
 tweepy = "*"
 tqdm = "*"
-
+google-cloud-profiler = "*"
 
 [requires]
 python_version = "3.7"
