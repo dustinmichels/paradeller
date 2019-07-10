@@ -47,8 +47,9 @@ def init_google_profiler():
 if __name__ == "__main__":
     # init profiling
     if os.getenv("USER", "") == "dustin7538":
+        print("Initialzing Google profiler...")
         init_google_profiler()
-        time.sleep(10)  # for neater logging output
+        time.sleep(60)  # for neater logging output
 
     # parse command line arguments
     default_n = "100"
