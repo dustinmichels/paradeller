@@ -111,7 +111,7 @@ def main(n=200):
 
     # print message
     post_len = len(data)
-    size_mb = os.path.getsize(fp) / 1e6
+    size_mb = os.path.getsize(archive_fp) / 1e6
     print("\n...Saved archive to file")
     print(f"...New archive length: {post_len:,}")
     print(f"...Added {post_len - pre_len:,} tweets")
