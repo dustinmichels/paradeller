@@ -5,7 +5,7 @@ import tweepy
 from tqdm import trange
 
 from paradeller.dataprep import tokenize
-from paradeller.helper import load_archive, update_archive, fp
+from paradeller.helper import load_archive, update_archive, archive_fp
 from paradeller.keys import (
     access_token,
     accss_token_secret,
