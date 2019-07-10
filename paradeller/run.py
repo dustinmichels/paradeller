@@ -103,4 +103,3 @@ if __name__ == "__main__":
     # ---------- SUMMARIZE & SAVE ----------
     results = dict(stanzas=stanzas, poems=poems, duplicates=duplicates)
     save_results(results)
-    print("results saved to data/found/results_[datetime].pickle")
