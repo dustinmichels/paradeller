@@ -1,13 +1,15 @@
 from paradeller.dataprep import tokenize
-from .poems import sample1, sample2, sample3
+from .poems import samples
 
 
 def load_samples():
     counter = 0
-    data1, counter = datafy_poem(sample1, "sample1", counter)
-    data2, counter = datafy_poem(sample2, "sample2", counter)
-    data3, counter = datafy_poem(sample3, "sample3", counter)
-    return data1 + data2 + data3
+    data = []
+    for i, sample in enumerate(samples):
+        name = f"sample{i}"
+        sample_data, counter = datafy_poem(sample, name, counter)
+        data.extend(sample_data)
+    return data
 
 
 def datafy_poem(text, name, counter):

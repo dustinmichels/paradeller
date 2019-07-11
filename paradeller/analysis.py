@@ -1,8 +1,8 @@
 from itertools import chain, combinations
+from math import factorial as fact
 from typing import Set
 
 from tqdm.auto import tqdm
-
 
 # ---------- FIND STANZAS ----------
 
@@ -24,7 +24,7 @@ def find_matches(id1, id2, adj_list_ids, adj_list_words):
     stanza_words = adj_list_ids[id1] + adj_list_ids[id2]
 
     # look for other tweets with those words
-    pot_ids = get_potential_tweets(stanza_words, adj_list_words)
+    pot_ids = set().union(*[adj_list_words[w] for w in stanza_words])
 
     # --- filter down ---
     # remove start tweets
@@ -38,17 +38,9 @@ def find_matches(id1, id2, adj_list_ids, adj_list_words):
     return []
 
 
-def get_potential_tweets(stanza_words, adj_list_words) -> Set[int]:
-    """Get all tweets that share words with start tweets"""
-    potential_ids: Set[int] = set()
-    for word in stanza_words:
-        potential_ids.update(adj_list_words[word])
-    return potential_ids
-
-
 def find_valid_matches(pot_ids, adj_list_ids, stanza_words):
     # make pairings of two potential tweets
-    combos = list(combinations(pot_ids, 2))
+    combos = combinations(pot_ids, 2)
 
     # for each pair:
     # get combination of words, check if equals stanza_words
@@ -96,13 +88,17 @@ def find_final_stanzas_from_stanzas(stanzas, adj_list_ids, adj_list_words):
 def find_final_stanzas(stan1, stan2, stan3, adj_list_ids, adj_list_words):
     pair1, pair2, pair3 = stan1[:2], stan2[:2], stan3[:2]
 
+    # check for repeated lines
+    if len(set().union(stan1, stan2, stan3)) < 12:
+        return []
+
     # combine words from tweets
     prev_stanza_words = list(
         chain.from_iterable([adj_list_ids[line] for line in [*pair1, *pair2, *pair3]])
     )
 
     # look for other tweets with those words
-    pot_ids = get_potential_tweets(prev_stanza_words, adj_list_words)
+    pot_ids = set().union(*[adj_list_words[w] for w in prev_stanza_words])
 
     # --- filter down ---
     # remove lines from previous stanzas
@@ -140,3 +136,15 @@ def consolidate_poems(valid_poems):
             poem = poem_start + [end]
         poems.append(poem)
     return poems
+
+
+# ---------- OTHER ----------
+
+
+def get_num_combos(n, r):
+    """
+    Combinations math.
+      - n: types to choose from
+      - r: number chosen
+    """
+    return fact(n) // (fact(r) * fact(n - r))

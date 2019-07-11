@@ -7,6 +7,8 @@ data_fp = os.path.abspath(os.path.join(os.path.dirname(__file__), "../data"))
 archive_fp = os.path.join(data_fp, "archive.json")
 pickle_fp = os.path.join(data_fp, "stuff.pickle")
 
+DATE_FMT = "%Y-%m-%d-%H%M"
+
 
 def load_archive():
     """Load data file from json"""
@@ -22,7 +24,7 @@ def update_archive(archive):
 
 def save_results(results):
     """Save results dict as JSON"""
-    dt_string = datetime.utcnow().strftime("%Y-%m-%d-%H%M")
+    dt_string = datetime.utcnow().strftime(DATE_FMT)
     filename = f"results_{dt_string}.json"
     fp = os.path.join(data_fp, "found", filename)
     with open(fp, "w") as file:

@@ -1,5 +1,6 @@
 import os
 import sys
+from collections import defaultdict
 from datetime import datetime
 from itertools import combinations
 from multiprocessing import Pool
@@ -12,11 +13,9 @@ from paradeller.analysis import (
     consolidate_stanzas,
     find_final_stanzas,
     find_matches,
-    get_num_combos,
 )
-from paradeller.dataprep import load_and_prep, prep_data, sort_ids_by_popularity
+from paradeller.dataprep import load_and_prep, sort_ids_by_popularity
 from paradeller.helper import DATE_FMT, save_results
-from paradeller.samples import load_samples
 
 
 def find_matches_for_pair(p):
@@ -38,7 +37,7 @@ if __name__ == "__main__":
     # parse command line arguments
     args_dict = dict(enumerate(sys.argv))
     n = int(args_dict.get(1, "100"))  # number of ids to pair off
-    style = args_dict.get(2, "load")  # load | fresh | test
+    style = args_dict.get(2, "load")  # load from picke, or prepare data anew
 
     # note start time
     start_time = datetime.utcnow()
@@ -46,20 +45,10 @@ if __name__ == "__main__":
     # ---------- LOOK FOR STANZAS ----------
 
     # load & prepare data
-    if style == "load":
-        print("loading data")
-        data, duplicates, adj_list_words, adj_list_ids = load_and_prep(use_pickle=True)
-    elif style == "fresh":
-        print("fresh")
-        data, duplicates, adj_list_words, adj_list_ids = load_and_prep(
-            use_pickle=False, update_pickle=True
-        )
-    elif style == "test":
-        print("Loading samples")
-        data = load_samples()
-        data, duplicates, adj_list_words, adj_list_ids = prep_data(data, verbose=False)
-    else:
-        exit("Invalid argument")
+    use_pickle = style == "load"
+    data, duplicates, adj_list_words, adj_list_ids = load_and_prep(
+        use_pickle=use_pickle
+    )
 
     # sort tweet ids by avg popularity of its words
     print("\nSorting by popularity...")
@@ -71,8 +60,12 @@ if __name__ == "__main__":
 
     # search for stanzas
     print(f"\nSearching for matches, using {n} ids")
-    with Pool(os.cpu_count()) as pool:
-        res = list(tqdm(pool.imap(find_matches_for_pair, pairs), total=len(pairs)))
+    d = defaultdict(list)
+    for pair in tqdm(pairs):
+        w1 = adj_list_ids[pair[0]]
+        w2 = adj_list_ids[pair[1]]
+        words = tuple(sorted(w1 + w2))
+        d[words].append(pair)
 
     # zip results with search pairs, filter out empty
     valid_stanzas = [x for x in list(zip(pairs, res)) if x[1]]
@@ -81,19 +74,17 @@ if __name__ == "__main__":
 
     # ---------- LOOK FOR PARADELLES ----------
     if len(stanzas) >= 3:
-        print("\nFinding stanza combinations to check...")
+        print("Finding stanza combinations to check...")
         # all combinations of stanzas
-        combos = combinations(stanzas, 3)
-        num_combos = get_num_combos(len(stanzas), 3)
+        all_combos = combinations(stanzas, 3)
+        # create generator for stanza combimations where all lines are unique
+        combos = (c for c in all_combos if len(set().union(*c)) == 12)
 
         # look for complete paradelles
         print("Searching for complete paradelles")
         with Pool(os.cpu_count()) as pool:
-            res = list(
-                tqdm(pool.imap(find_final_stanzas_helper, combos), total=num_combos)
-            )
-        combos = combinations(stanzas, 3)  # replenish generator
-        valid_poems = list((x for x in list(zip(combos, res)) if x[1]))
+            res = list(tqdm(pool.imap(find_final_stanzas_helper, combos)))
+        valid_poems = [x for x in list(zip(combos, res)) if x[1]]
         poems = consolidate_poems(valid_poems)
         print(f"Found {len(poems)} poems.")
     else:
