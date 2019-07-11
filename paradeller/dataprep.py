@@ -1,5 +1,5 @@
 import string
-from collections import defaultdict
+from collections import defaultdict, Counter
 from statistics import mean
 from typing import Dict
 
@@ -18,8 +18,10 @@ def tokenize(text):
     list
         list of standardized tokens
     """
-    # replace punctuation with whitespace
-    punc = string.punctuation + "“" + "”"
+    # remove apostraphe
+    text = text.replace("'", "")
+    # replace other punctuation with space
+    punc = '!"#$%&()*+,-./:;<=>?@[\\]^_`{|}~“”'
     text = text.translate(str.maketrans(punc, " " * len(punc)))
     # remove emoji
     emoji_pattern = emoji.get_emoji_regexp()
@@ -55,24 +57,10 @@ def filter_out_duplicates(data, duplicates):
     return [x for x in data if x["id"] in unique_phrase_ids]
 
 
-def filter_out_short(data, n=3, **kwargs):
+def filter_out_short(data, n=4, **kwargs):
     """Only keep tweets with # tokens >= n"""
     nobar = kwargs.get("nobar", False)
     return [x for x in tqdm(data, disable=nobar) if len(tokenize(x["text"])) >= n]
-
-
-def filter_out_oddballs(data, **kwargs):
-    """
-    Filter out tweets that don't share each word with 2 other lines
-    """
-    # create an adj list by word
-    adj_list_words = create_adj_list_by_word(data, **kwargs)
-    # find words with too few matches
-    filtered_adj_list_words = {k: v for k, v in adj_list_words.items() if len(v) < 3}
-    # consolidate ids to remove
-    rm_ids = set().union(*filtered_adj_list_words.values())
-    # remove from data
-    return [x for x in data if x["id"] not in rm_ids]
 
 
 def filter_out_oddballs_recursive(data, verbose=True, **kwargs):
@@ -86,6 +74,40 @@ def filter_out_oddballs_recursive(data, verbose=True, **kwargs):
     else:
         printif(f"{diff:,} tweets removed. Running again.")
         return filter_out_oddballs_recursive(data, verbose=verbose, **kwargs)
+
+
+def filter_out_oddballs(data, **kwargs):
+    """
+    Filter out tweets that:
+      1) Don't share each word with at least 2 other lines
+      2) Include a word enough times that too few remain to complete a poem
+    """
+    # --- SETUP ---
+    # create an adj lists
+    adj_list_words, adj_list_ids = restructure_data(data, **kwargs)
+
+    # get overall word count
+    overall_wc = Counter()
+    for words in adj_list_ids.values():
+        overall_wc.update(words)
+
+    # --- INSUFFICIENT IDS ---
+    # find words that don't appear in at least 3 tweets
+    filtered_adj_list_words = {k: v for k, v in adj_list_words.items() if len(v) < 3}
+
+    # consolidate ids to remove
+    rm_ids = set().union(*filtered_adj_list_words.values())
+
+    # --- INSUFFICIENT WORD COUNTS ---
+    ids = list(adj_list_ids.keys())
+    for i in ids:
+        counts = Counter(adj_list_ids[i])
+        sufficient = lambda word: overall_wc[word] - counts[word] >= (counts[word] * 2)
+        if not all([sufficient(word) for word in counts]):
+            rm_ids.add(i)
+
+    # remove from data
+    return [x for x in data if x["id"] not in rm_ids]
 
 
 # ---------- RESTRUCTURING ----------
@@ -103,8 +125,7 @@ def restructure_data(data, **kwargs) -> tuple:
     Returns
     -------
     tuple
-        adj_list_by_word -- {word: {ids}}
-        adj_list_by_id -- {id  : [words]}
+        (adj_list_by_word, adj_list_by_id)
     """
     nobar = kwargs.get("nobar", False)
 
@@ -156,7 +177,7 @@ def prep_data(data, verbose=True):
     """
     Returns tuple: data, duplicates, adj_list_words, adj_list_ids
     """
-    showlen = lambda data: print(f"Length: {len(data):,}") if verbose else None
+    showlen = lambda data: print(f"  length: {len(data):,}\n") if verbose else None
     printif = lambda s: print(s) if verbose else None
     nobar = not verbose
 
@@ -165,7 +186,7 @@ def prep_data(data, verbose=True):
 
     # remove too short
     printif("> Remove too short") if verbose else None
-    data = filter_out_short(data, nobar=nobar)
+    data = filter_out_short(data, n=4, nobar=nobar)
     showlen(data)
 
     # remove duplicate phrases
