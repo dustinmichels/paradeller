@@ -14,12 +14,12 @@ def stanza_sorter_maker(adj_list_ids):
         lineC = adj_list_ids[stanza[2]]
         lineD = adj_list_ids[stanza[3]]
 
-        # diff b/w A and B
+        # num. words different b/w A and B
         diff_pts = len(set(lineA) ^ set(lineB))
 
-        # points for different start words
-        start_letters = set((x[0] for x in [lineA, lineB, lineC, lineD]))
-        start_pts = len(start_letters)
+        # num. different start words
+        start_words = set((x[0] for x in [lineA, lineB, lineC, lineD]))
+        start_pts = len(start_words)
 
         pts = sum((len_pts, (diff_pts * 8), (start_pts * 20)))
         return pts
@@ -45,10 +45,10 @@ def print_poems(poems, data, n=50):
     get_line = lambda id: next(x for x in data if x["id"] == id)
     for poem in poems[:n]:
         print("~" * 50)
-        *init_stanzas, last_stanza = poem
-        for s in init_stanzas:
+        *initial_stanzas, final_stanza = poem
+        for s in initial_stanzas:
             print_stanza(s, data)
             print()
-        for id_ in last_stanza:
+        for id_ in final_stanza:
             line = get_line(id_)
             print(f"@{line['author']:20} {line['text']} ")
