@@ -93,7 +93,7 @@ if __name__ == "__main__":
                 tqdm(pool.imap(find_final_stanzas_helper, combos), total=num_combos)
             )
         combos = combinations(stanzas, 3)  # replenish generator
-        valid_poems = list((x for x in list(zip(combos, res)) if x[1]))
+        valid_poems = list((x for x in zip(combos, res) if x[1]))
         poems = consolidate_poems(valid_poems)
         print(f"Found {len(poems)} poems.")
     else:
