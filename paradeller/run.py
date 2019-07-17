@@ -4,7 +4,6 @@ from datetime import datetime
 from itertools import combinations
 from multiprocessing import Pool
 
-import googlecloudprofiler
 from tqdm.auto import tqdm
 
 from paradeller.analysis import (
@@ -30,11 +29,6 @@ def find_final_stanzas_helper(stanzas):
 
 
 if __name__ == "__main__":
-    # init profiling, if running on Google Compute Engine
-    if os.getenv("USER", "") == "dustin7538":
-        print("Initialzing Google profiler...")
-        googlecloudprofiler.start(service="paradeller", verbose=1)
-
     # parse command line arguments
     args_dict = dict(enumerate(sys.argv))
     n = int(args_dict.get(1, "100"))  # number of ids to pair off

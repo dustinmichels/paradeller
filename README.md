@@ -12,9 +12,6 @@ brew install git-lfs
 
 # Linux
 sudo apt-get install git-lfs
-
-# Initialize
-git lfs install
 ```
 
 ### 2) Clone Repo
@@ -22,6 +19,9 @@ git lfs install
 ```bash
 git clone https://github.com/dustinmichels/paradeller.git
 cd paradeller
+
+# Initialize large file storage
+git lfs install
 ```
 
 ### 3) Install Python Dependencies
@@ -82,50 +82,7 @@ Can easily run with default of 1,000 ids using:
 ./search.sh
 ```
 
-## About
-
-A paradelle is a poem that looks like this:
-
-> Twilight falls, darkness cover me  
-> Twilight falls, darkness cover me  
-> as gentle slumber lures awakening dreams  
-> as gentle slumber lures awakening dreams  
-> cover me gentle twilight, darkness lures dreams,  
-> awakening as slumber falls.
->
-> Journey on celelstial wings through astral visions  
-> Journey on celelstial wings through astral visions  
-> and hover above earth-bound limitations  
-> and hover above earth-bound limitations  
-> on celestial wings, hover above earth bound limitations  
-> and journey through astral visions.
->
-> Explore the expansiveness of self,  
-> Explore the expansiveness of self,  
-> look within and discover your untapped wealth  
-> look within and discover your untapped wealth  
-> look within the expansiveness of self,  
-> discover and explore your untapped wealth.
->
-> cover me, dreams look within darkness  
-> journey -- discover your gentle awakening;  
-> slumber lures the expansiveness of self  
-> through astral visions. Hover above  
-> earthbound limitations on celestial wings,  
-> and as twilight falls, explore wealth -- untapped.
->
-> _("A Paradelle of Winged Flight", Mary Ellen Clark, 2003.)_
-
-The rules are fairly simple.
-
-For the first three stanzas:
-
-- Lines 1 & 3 must repeat.
-- Lines 5 & 6 must use all the words from lines 1 & 3 (no more no less).
-
-For the final stanza, you must use all the words from lines 1 & 3 of the previous stanzas.
-
-## Dev
+## Dev Notes
 
 To generate `requirements.txt` from `Pipefile`:
 
