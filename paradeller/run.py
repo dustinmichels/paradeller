@@ -4,7 +4,6 @@ from datetime import datetime
 from itertools import combinations
 from multiprocessing import Pool
 
-import googlecloudprofiler
 from tqdm.auto import tqdm
 
 from paradeller.analysis import (
@@ -30,11 +29,6 @@ def find_final_stanzas_helper(stanzas):
 
 
 if __name__ == "__main__":
-    # init profiling, if running on Google Compute Engine
-    if os.getenv("USER", "") == "dustin7538":
-        print("Initialzing Google profiler...")
-        googlecloudprofiler.start(service="paradeller", verbose=1)
-
     # parse command line arguments
     args_dict = dict(enumerate(sys.argv))
     n = int(args_dict.get(1, "100"))  # number of ids to pair off
@@ -93,7 +87,7 @@ if __name__ == "__main__":
                 tqdm(pool.imap(find_final_stanzas_helper, combos), total=num_combos)
             )
         combos = combinations(stanzas, 3)  # replenish generator
-        valid_poems = list((x for x in list(zip(combos, res)) if x[1]))
+        valid_poems = list((x for x in zip(combos, res) if x[1]))
         poems = consolidate_poems(valid_poems)
         print(f"Found {len(poems)} poems.")
     else:
