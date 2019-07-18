@@ -18,7 +18,6 @@ numpy = "*"
 pandas = "*"
 tweepy = "*"
 tqdm = "*"
-google-cloud-profiler = "*"
 
 [requires]
 python_version = "3.7"
