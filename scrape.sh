@@ -1,1 +1,1 @@
-python -m paradeller.scrape 10000
+python -m paradeller.scrape 10000 
