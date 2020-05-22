@@ -1,5 +1,7 @@
 keys.py
 
+data/archive.json
+
 .vscode/
 
 .ipynb_checkpoints/
